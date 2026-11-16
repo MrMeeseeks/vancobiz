@@ -12,7 +12,8 @@ export const CONTACT = {
   phoneHref: "tel:+16047737736",
   address: "1919 Lonsdale Ave, North Vancouver",
   city: "North Vancouver, BC",
-  clubUrl: "https://club.vancobiz.com/members/",
+  // Club members page prototype (github.com/MrMeeseeks/vancobiz-club). Was club.vancobiz.com/members/.
+  clubUrl: "https://mrmeeseeks.github.io/vancobiz-club/",
   // Optional: set NEXT_PUBLIC_FORM_ENDPOINT (e.g. a Formspree URL) to receive form posts.
   // Without it, the booking form opens a pre-filled email instead.
   formEndpoint: process.env.NEXT_PUBLIC_FORM_ENDPOINT ?? "",
