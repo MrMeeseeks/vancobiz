@@ -1,8 +1,9 @@
 "use client";
 
-import { Suspense, useEffect, useMemo, useRef, useState, type ComponentRef } from "react";
+import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { Environment, Lightformer, MeshDistortMaterial, Sparkles } from "@react-three/drei";
+import { Environment, Lightformer, Sparkles } from "@react-three/drei";
+import VenomBlob from "./VenomBlob";
 import * as THREE from "three";
 import { PALETTES, type LogoKey, type PaletteKey } from "@/lib/design";
 import { LOGO_PATHS, type LogoShape } from "@/lib/logoPaths";
@@ -98,7 +99,8 @@ function Chrome({ tint, amount = 0.3 }: { tint?: string; amount?: number }) {
       roughness={0.07}
       clearcoat={1}
       clearcoatRoughness={0.05}
-      iridescence={1}
+      // Full rainbow sheen on plain chrome; toned down when tinted so the brand colour reads.
+      iridescence={tint ? 0.25 : 1}
       iridescenceIOR={1.7}
       iridescenceThicknessMinimum={180}
       iridescenceThicknessMaximum={820}
@@ -177,7 +179,7 @@ function LogoModel({ logo, palette }: { logo: LogoKey; palette: PaletteKey }) {
   const brand = logo === "brand-vb";
   return (
     <group>
-      <mesh geometry={geo.v}>{brand ? <Gloss color={c.logoV} /> : <Chrome tint={c.logoV} amount={0.5} />}</mesh>
+      <mesh geometry={geo.v}>{brand ? <Gloss color={c.logoV} /> : <Chrome tint={c.logoV} amount={0.7} />}</mesh>
       {geo.b && (
         <mesh geometry={geo.b}>{brand ? <Gloss color={c.logoB} /> : <Chrome tint={c.logoB} amount={0.5} />}</mesh>
       )}
@@ -187,8 +189,8 @@ function LogoModel({ logo, palette }: { logo: LogoKey; palette: PaletteKey }) {
 
 function Sculpture({ mobile, reducedMotion, palette, logo }: Props) {
   const group = useRef<THREE.Group>(null);
-  const blob = useRef<THREE.Mesh>(null);
-  const distort = useRef<ComponentRef<typeof MeshDistortMaterial>>(null);
+  const blobGroup = useRef<THREE.Group>(null);
+  const boost = useRef(0);
   const keyLight = useRef<THREE.PointLight>(null);
   const rimLight = useRef<THREE.PointLight>(null);
   const [hovered, setHovered] = useState(false);
@@ -226,11 +228,14 @@ function Sculpture({ mobile, reducedMotion, palette, logo }: Props) {
     g.scale.setScalar(sc);
     g.position.y = THREE.MathUtils.lerp(g.position.y, p * 1.1 + (reducedMotion ? 0 : Math.sin(t * 0.8) * 0.06), damp);
 
-    if (distort.current) {
-      const target = 0.32 + p * 0.35 + (hovered ? 0.15 : 0);
-      distort.current.distort = THREE.MathUtils.lerp(distort.current.distort, target, damp * 0.3);
+    // The blob does not tilt with the logo (its tendrils aim at the cursor in world space),
+    // but it follows the logo's size and float. Hover and scroll stir it up.
+    boost.current = (hovered ? 0.35 : 0) + p * 0.4;
+    const bg = blobGroup.current;
+    if (bg) {
+      bg.scale.copy(g.scale);
+      bg.position.set(g.position.x, g.position.y, 0);
     }
-    if (blob.current) blob.current.rotation.z = t * 0.08;
 
     // Lighting shift on hover: key light warms to the highlight colour, rim intensifies.
     if (keyLight.current && rimLight.current) {
@@ -254,23 +259,24 @@ function Sculpture({ mobile, reducedMotion, palette, logo }: Props) {
         onPointerOver={() => setHovered(true)}
         onPointerOut={() => setHovered(false)}
       >
-        <LogoModel logo={logo} palette={palette} />
-        {logo !== "medallion" && (
-          /* Ferrofluid core sitting behind the mark */
-          <mesh ref={blob} position={[0, 0.05, -0.9]} scale={1.25}>
-            <sphereGeometry args={[1, mobile ? 64 : 128, mobile ? 64 : 128]} />
-            <MeshDistortMaterial
-              ref={distort}
-              color="#0d0d14"
-              metalness={1}
-              roughness={0.12}
-              distort={0.32}
-              speed={reducedMotion ? 0 : 1.6}
-              envMapIntensity={1.2}
-            />
-          </mesh>
-        )}
+        {/* Pulled toward the camera so it always sits clear of the blob behind it */}
+        <group position-z={logo === "medallion" ? 0 : 0.45}>
+          <LogoModel logo={logo} palette={palette} />
+        </group>
       </group>
+      {logo !== "medallion" && (
+        <group ref={blobGroup} scale={0}>
+          <group position={[0, 0.05, -1.9]} scale={1.6}>
+            <VenomBlob
+              pointer={pointer}
+              boost={boost}
+              color={PALETTES[palette].a2}
+              segments={mobile ? 56 : 96}
+              reducedMotion={reducedMotion}
+            />
+          </group>
+        </group>
+      )}
     </>
   );
 }
