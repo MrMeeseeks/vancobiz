@@ -14,6 +14,8 @@ type Props = {
   reducedMotion: boolean;
   /** Max forward extent (local units) so the surface stays behind whatever sits in front. */
   maxFront?: number;
+  /** Receives the current agitation (0..~1.5) each frame so other things can react to it. */
+  agitationRef?: RefObject<number>;
 };
 
 const TAU = Math.PI * 2;
@@ -24,7 +26,7 @@ const TAU = Math.PI * 2;
  * - a bulge that reaches toward the cursor and splits into spiky ridges,
  * - tendrils that whip around the body; all of it gets wilder the faster the mouse moves.
  */
-export default function VenomBlob({ pointer, boost, color, segments, reducedMotion, maxFront = 1.3 }: Props) {
+export default function VenomBlob({ pointer, boost, color, segments, reducedMotion, maxFront = 0.75, agitationRef }: Props) {
   const mesh = useRef<THREE.Mesh>(null);
   const geo = useMemo(() => new THREE.SphereGeometry(1, segments, segments), [segments]);
   const base = useMemo(() => Float32Array.from(geo.attributes.position.array as Float32Array), [geo]);
@@ -34,7 +36,8 @@ export default function VenomBlob({ pointer, boost, color, segments, reducedMoti
 
   const { body, emissive } = useMemo(() => {
     const c = new THREE.Color(color);
-    return { body: c.clone().multiplyScalar(0.42), emissive: c.clone() };
+    // Near-black with a purple soul: very dark body, purple only in the glow and highlights.
+    return { body: c.clone().multiplyScalar(0.1), emissive: c.clone().multiplyScalar(0.6) };
   }, [color]);
 
   useEffect(() => () => geo.dispose(), [geo]);
@@ -55,6 +58,7 @@ export default function VenomBlob({ pointer, boost, color, segments, reducedMoti
     const rate = want > s.agitation ? 1 - Math.pow(0.0005, delta) : 1 - Math.pow(0.35, delta);
     s.agitation += (want - s.agitation) * rate;
     const a = reducedMotion ? 0 : s.agitation;
+    if (agitationRef) agitationRef.current = a;
 
     // Direction the mass reaches toward (cursor sits in front of the scene).
     target.set(p.x * 1.6, p.y * 1.3, 0.35).normalize();
@@ -116,7 +120,7 @@ export default function VenomBlob({ pointer, boost, color, segments, reducedMoti
     g.computeVertexNormals();
 
     const mat = m.material as THREE.MeshPhysicalMaterial;
-    mat.emissiveIntensity = 0.12 + a * 0.35;
+    mat.emissiveIntensity = 0.05 + a * 0.07;
   });
 
   return (
@@ -124,14 +128,14 @@ export default function VenomBlob({ pointer, boost, color, segments, reducedMoti
       <meshPhysicalMaterial
         color={body}
         emissive={emissive}
-        emissiveIntensity={0.12}
-        metalness={0.75}
-        roughness={0.16}
-        clearcoat={1}
-        clearcoatRoughness={0.1}
-        iridescence={0.45}
+        emissiveIntensity={0.06}
+        metalness={0.6}
+        roughness={0.22}
+        clearcoat={0.35}
+        clearcoatRoughness={0.18}
+        iridescence={0.2}
         iridescenceIOR={1.4}
-        envMapIntensity={1.3}
+        envMapIntensity={0.16}
       />
     </mesh>
   );

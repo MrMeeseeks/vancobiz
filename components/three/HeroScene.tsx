@@ -191,6 +191,8 @@ function Sculpture({ mobile, reducedMotion, palette, logo }: Props) {
   const group = useRef<THREE.Group>(null);
   const blobGroup = useRef<THREE.Group>(null);
   const boost = useRef(0);
+  const agitation = useRef(0);
+  const sparks = useRef<THREE.Group>(null);
   const keyLight = useRef<THREE.PointLight>(null);
   const rimLight = useRef<THREE.PointLight>(null);
   const [hovered, setHovered] = useState(false);
@@ -237,12 +239,25 @@ function Sculpture({ mobile, reducedMotion, palette, logo }: Props) {
       bg.position.set(g.position.x, g.position.y, 0);
     }
 
+    // Particles ride the blob's energy: they swirl, get pulled toward the cursor and
+    // expand a little as it thrashes, then drift back when it calms down.
+    const sp = sparks.current;
+    if (sp && !reducedMotion) {
+      const a = agitation.current;
+      sp.rotation.z += delta * (0.03 + a * 0.225);
+      sp.rotation.y = THREE.MathUtils.lerp(sp.rotation.y, pointer.current.x * 0.25, damp * 0.2);
+      const pull = 0.25 + a * 0.15;
+      sp.position.x = THREE.MathUtils.lerp(sp.position.x, pointer.current.x * pull, damp * 0.15);
+      sp.position.y = THREE.MathUtils.lerp(sp.position.y, pointer.current.y * pull * 0.8 + g.position.y, damp * 0.15);
+      sp.scale.setScalar(THREE.MathUtils.lerp(sp.scale.x, 1 + a * 0.045, damp * 0.2));
+    }
+
     // Lighting shift on hover: key light warms to the highlight colour, rim intensifies.
     if (keyLight.current && rimLight.current) {
       keyLight.current.color.lerp(hovered ? colors.hover : colors.key, damp * 0.25);
       rimLight.current.color.lerp(colors.rim, damp * 0.25);
       keyLight.current.intensity = THREE.MathUtils.lerp(keyLight.current.intensity, hovered ? 60 : 35, damp * 0.3);
-      rimLight.current.intensity = THREE.MathUtils.lerp(rimLight.current.intensity, hovered ? 70 : 40, damp * 0.3);
+      rimLight.current.intensity = THREE.MathUtils.lerp(rimLight.current.intensity, hovered ? 32 : 18, damp * 0.3);
       keyLight.current.position.set(pointer.current.x * 4, pointer.current.y * 3 + 1, 4);
     }
   });
@@ -250,7 +265,7 @@ function Sculpture({ mobile, reducedMotion, palette, logo }: Props) {
   return (
     <>
       <pointLight ref={keyLight} color={colors.key} intensity={35} distance={20} position={[3, 2, 4]} />
-      <pointLight ref={rimLight} color={colors.rim} intensity={40} distance={20} position={[-4, -2, -2]} />
+      <pointLight ref={rimLight} color={colors.rim} intensity={18} distance={20} position={[-4, -2, -2]} />
       {/* Starts at 0 and eases up to its fitted size: a grow-in intro. */}
       <group
         ref={group}
@@ -264,6 +279,19 @@ function Sculpture({ mobile, reducedMotion, palette, logo }: Props) {
           <LogoModel logo={logo} palette={palette} />
         </group>
       </group>
+      {!reducedMotion && (
+        <group ref={sparks}>
+          <Sparkles
+            key={`sparks-${palette}`}
+            count={mobile ? 28 : 80}
+            scale={[8, 6, 4]}
+            size={mobile ? 2 : 2.6}
+            speed={0.35}
+            opacity={0.7}
+            color={PALETTES[palette].a1}
+          />
+        </group>
+      )}
       {logo !== "medallion" && (
         <group ref={blobGroup} scale={0}>
           <group position={[0, 0.05, -1.9]} scale={1.6}>
@@ -273,6 +301,7 @@ function Sculpture({ mobile, reducedMotion, palette, logo }: Props) {
               color={PALETTES[palette].a2}
               segments={mobile ? 56 : 96}
               reducedMotion={reducedMotion}
+              agitationRef={agitation}
             />
           </group>
         </group>
@@ -282,7 +311,7 @@ function Sculpture({ mobile, reducedMotion, palette, logo }: Props) {
 }
 
 export default function HeroScene(props: Props) {
-  const { mobile, reducedMotion, palette } = props;
+  const { mobile, palette } = props;
   const wrap = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(true);
   const c = PALETTES[palette];
@@ -315,17 +344,6 @@ export default function HeroScene(props: Props) {
             <Lightformer form="ring" intensity={3} color={c.a3} position={[0, 4, -4]} scale={3} />
             <Lightformer form="rect" intensity={1.5} color="#ffffff" position={[0, 0, 6]} scale={[10, 2, 1]} />
           </Environment>
-          {!reducedMotion && (
-            <Sparkles
-              key={`sparks-${palette}`}
-              count={mobile ? 28 : 80}
-              scale={[8, 6, 4]}
-              size={mobile ? 2 : 2.6}
-              speed={0.35}
-              opacity={0.7}
-              color={c.a1}
-            />
-          )}
         </Suspense>
       </Canvas>
     </div>
