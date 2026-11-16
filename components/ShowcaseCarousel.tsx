@@ -2,10 +2,10 @@
 
 import { useRef, useState, type KeyboardEvent } from "react";
 import { motion, type PanInfo } from "framer-motion";
-import { ArrowLeft, ArrowRight, Crown, Handshake, RotateCcw, Sprout, Users } from "lucide-react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 import { WORK, CLUB, CONTACT } from "@/lib/content";
-import { useCanHover, useIsMobile } from "@/lib/useDevice";
-import Logo from "./Logo";
+import { useIsMobile } from "@/lib/useDevice";
+import GoldPass from "./GoldPass";
 
 function CaseCoverflow() {
   const [active, setActive] = useState(0);
@@ -130,79 +130,6 @@ function CaseCoverflow() {
   );
 }
 
-const PERK_ICONS = [Users, Handshake, Sprout];
-
-function VipPass() {
-  const [flipped, setFlipped] = useState(false);
-  const canHover = useCanHover();
-
-  return (
-    <div className="mx-auto w-full max-w-[400px]" style={{ perspective: 1200 }}>
-      <motion.button
-        type="button"
-        aria-pressed={flipped}
-        aria-label={flipped ? "VancoBiz Club pass, showing perks. Click to flip back." : "VancoBiz Club pass. Click to reveal perks."}
-        onClick={() => setFlipped((f) => !f)}
-        onPointerEnter={() => canHover && setFlipped(true)}
-        onPointerLeave={() => canHover && setFlipped(false)}
-        animate={{ rotateY: flipped ? 180 : 0 }}
-        whileHover={canHover ? { scale: 1.02 } : undefined}
-        transition={{ type: "spring", stiffness: 90, damping: 16 }}
-        style={{ transformStyle: "preserve-3d" }}
-        className="relative block aspect-[5/7] w-full text-left focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
-      >
-        {/* Front */}
-        <div className="backface-hidden absolute inset-0 overflow-hidden rounded-[28px] border border-white/15 bg-[linear-gradient(145deg,#141420,#0a0a10_55%,#1b1030)] p-7 shadow-[0_30px_80px_color-mix(in_srgb,var(--a2)_35%,transparent)]">
-          <div aria-hidden="true" className="absolute inset-0 bg-[conic-gradient(from_200deg_at_70%_20%,color-mix(in_srgb,var(--a1)_25%,transparent),color-mix(in_srgb,var(--a2)_25%,transparent),color-mix(in_srgb,var(--a3)_20%,transparent),color-mix(in_srgb,var(--a1)_25%,transparent))] opacity-60 mix-blend-screen blur-2xl" />
-          <div className="relative flex h-full flex-col">
-            <div className="flex items-center justify-between">
-              <Logo />
-              <Crown className="text-highlight" size={22} aria-hidden="true" />
-            </div>
-            <div className="mt-auto">
-              <div aria-hidden="true" className="mb-6 h-9 w-12 rounded-md bg-gradient-to-br from-highlight to-[#a8770a] opacity-90" />
-              <p className="text-xs tracking-[0.3em] text-zinc-400 uppercase">Member pass</p>
-              <p className="display mt-1 text-4xl leading-none">
-                VancoBiz <span className="text-gradient">Club</span>
-              </p>
-              <p className="mt-4 text-sm text-zinc-400">
-                {canHover ? "Hover" : "Tap"} to reveal perks
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Back */}
-        <div
-          className="backface-hidden absolute inset-0 overflow-hidden rounded-[28px] border border-accent/30 bg-[linear-gradient(160deg,#0d1a22,#0a0a10_60%)] p-7"
-          style={{ transform: "rotateY(180deg)" }}
-        >
-          <p className="eyebrow">Inside the club</p>
-          <ul className="mt-5 space-y-5">
-            {CLUB.perks.map((p, i) => {
-              const Icon = PERK_ICONS[i % PERK_ICONS.length];
-              return (
-                <li key={p.title} className="flex gap-3">
-                  <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-white/5 text-accent">
-                    <Icon size={18} aria-hidden="true" />
-                  </span>
-                  <span>
-                    <span className="block font-semibold text-white">{p.title}</span>
-                    <span className="block text-sm text-zinc-400">{p.text}</span>
-                  </span>
-                </li>
-              );
-            })}
-          </ul>
-          <span className="absolute right-7 bottom-7 left-7 flex items-center gap-2 text-xs text-zinc-500">
-            <RotateCcw size={12} aria-hidden="true" /> Flip back
-          </span>
-        </div>
-      </motion.button>
-    </div>
-  );
-}
-
 export default function ShowcaseCarousel() {
   return (
     <>
@@ -242,7 +169,7 @@ export default function ShowcaseCarousel() {
               </a>
             </div>
           </div>
-          <VipPass />
+          <GoldPass />
         </div>
       </section>
     </>
