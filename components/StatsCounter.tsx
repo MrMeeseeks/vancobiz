@@ -67,11 +67,11 @@ export default function StatsCounter() {
             </h2>
           </div>
           <p className="max-w-sm text-zinc-400">
-            Creative only matters if it pays. Here&apos;s what our work adds up to.
+            Creativity backed by performance. Every project is measured with precision and purpose.
           </p>
         </div>
 
-        <dl className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
+        <dl className="grid grid-cols-1 gap-3 sm:grid-cols-3 sm:gap-4">
           {STATS.map((s, i) => (
             <motion.div
               key={s.label}
@@ -83,7 +83,7 @@ export default function StatsCounter() {
             >
               <div
                 aria-hidden="true"
-                className="absolute -top-16 -right-16 size-40 rounded-full bg-cyan/10 blur-3xl transition-colors duration-500 group-hover:bg-violet/30"
+                className="absolute -top-16 -right-16 size-40 rounded-full bg-accent/10 blur-3xl transition-colors duration-500 group-hover:bg-glow/30"
               />
               <dt className="relative mt-3 text-sm text-zinc-400 sm:text-base">{s.label}</dt>
               <dd className="display text-gradient relative text-4xl whitespace-nowrap sm:text-5xl xl:text-6xl">

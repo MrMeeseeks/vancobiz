@@ -7,11 +7,11 @@ import type { ServiceKey } from "@/lib/content";
 
 function Shape({ kind }: { kind: ServiceKey }) {
   switch (kind) {
+    case "social":
+      return <octahedronGeometry args={[0.85, 0]} />;
     case "video":
       return <torusGeometry args={[0.62, 0.22, 16, 48]} />;
-    case "ads":
-      return <octahedronGeometry args={[0.85, 0]} />;
-    case "brand":
+    case "photo":
       return <icosahedronGeometry args={[0.82, 0]} />;
     case "events":
       return <torusKnotGeometry args={[0.5, 0.16, 96, 12]} />;

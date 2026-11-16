@@ -1,18 +1,24 @@
+import { LOGO_PATHS, toSvgPath } from "@/lib/logoPaths";
+
+const V_PATH = toSvgPath(LOGO_PATHS.v);
+const B_PATH = toSvgPath(LOGO_PATHS.b);
+
+/** The VancoBiz "VB" script mark as inline SVG. Colours follow the active palette. */
+export function VBMark({ className = "" }: { className?: string }) {
+  return (
+    <svg viewBox="-1.02 -0.66 2.04 1.32" className={className} aria-hidden="true">
+      <path d={V_PATH} fill="var(--logo-v)" />
+      <path d={B_PATH} fill="var(--logo-b)" />
+    </svg>
+  );
+}
+
 export default function Logo({ className = "" }: { className?: string }) {
   return (
     <span className={`flex items-center gap-2 ${className}`}>
-      <svg width="28" height="28" viewBox="0 0 32 32" aria-hidden="true">
-        <defs>
-          <linearGradient id="vb-logo" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0" stopColor="#00F0FF" />
-            <stop offset=".55" stopColor="#7000FF" />
-            <stop offset="1" stopColor="#FFB800" />
-          </linearGradient>
-        </defs>
-        <path d="M3 5h7l6 14 6-14h7L19 27h-6z" fill="url(#vb-logo)" />
-      </svg>
+      <VBMark className="h-7 w-auto" />
       <span className="font-display text-lg font-extrabold tracking-tight text-white">
-        Vanco<span className="text-cyan">Biz</span>
+        Vanco<span className="text-accent">Biz</span>
       </span>
     </span>
   );

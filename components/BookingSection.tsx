@@ -2,7 +2,7 @@
 
 import { useState, type FormEvent } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowRight, Check, Clock, Loader2, Mail, MapPin } from "lucide-react";
+import { ArrowRight, Check, Loader2, Mail, MapPin, Phone } from "lucide-react";
 import { CONTACT, REVENUE_OPTIONS, SERVICES } from "@/lib/content";
 
 type Fields = { name: string; email: string; business: string; revenue: string };
@@ -73,7 +73,7 @@ export default function BookingSection() {
   }
 
   const fieldClass = (k: keyof Errors) =>
-    `${inputBase} ${show(k) ? "border-red-400/70" : "border-white/10 focus:border-cyan/60"}`;
+    `${inputBase} ${show(k) ? "border-red-400/70" : "border-white/10 focus:border-accent/60"}`;
 
   return (
     <section id="book" aria-labelledby="book-title" className="relative px-5 py-20 sm:py-28">
@@ -84,21 +84,24 @@ export default function BookingSection() {
             Let&apos;s make something <span className="text-gradient">unrepeatable.</span>
           </h2>
           <p className="mt-5 max-w-md text-lg text-zinc-400">
-            Thirty minutes, no pitch deck. Tell us where you are and where you want to be, and
-            we&apos;ll map the fastest route there.
+            Book a free discovery call. Tell us where you are and where you want to be, and we&apos;ll
+            show you how to turn your vision into a high-performing digital presence.
           </p>
           <ul className="mt-10 space-y-4 text-zinc-300">
             <li className="flex items-center gap-3">
-              <MapPin size={18} className="text-cyan" aria-hidden="true" /> {CONTACT.city}
+              <MapPin size={18} className="text-accent" aria-hidden="true" /> {CONTACT.address}
             </li>
             <li className="flex items-center gap-3">
-              <Mail size={18} className="text-cyan" aria-hidden="true" />
+              <Mail size={18} className="text-accent" aria-hidden="true" />
               <a href={`mailto:${CONTACT.email}`} className="hover:text-white">
                 {CONTACT.email}
               </a>
             </li>
             <li className="flex items-center gap-3">
-              <Clock size={18} className="text-cyan" aria-hidden="true" /> {CONTACT.hours}
+              <Phone size={18} className="text-accent" aria-hidden="true" />
+              <a href={CONTACT.phoneHref} className="hover:text-white">
+                {CONTACT.phone}
+              </a>
             </li>
           </ul>
         </div>
@@ -117,7 +120,7 @@ export default function BookingSection() {
                   initial={{ scale: 0, rotate: -90 }}
                   animate={{ scale: 1, rotate: 0 }}
                   transition={{ type: "spring", stiffness: 220, damping: 14, delay: 0.1 }}
-                  className="grid size-20 place-items-center rounded-full bg-cyan text-obsidian shadow-[0_0_60px_rgba(0,240,255,0.6)]"
+                  className="grid size-20 place-items-center rounded-full bg-accent text-obsidian shadow-[0_0_60px_color-mix(in_srgb,var(--a1)_60%,transparent)]"
                 >
                   <Check size={38} strokeWidth={3} />
                 </motion.span>
@@ -224,11 +227,11 @@ export default function BookingSection() {
                           onClick={() => toggle(s.title)}
                           className={`rounded-full border px-4 py-2 text-sm transition ${
                             on
-                              ? "border-cyan bg-cyan/15 text-white shadow-[0_0_20px_rgba(0,240,255,0.25)]"
+                              ? "border-accent bg-accent/15 text-white shadow-[0_0_20px_color-mix(in_srgb,var(--a1)_25%,transparent)]"
                               : "border-white/10 bg-white/[0.03] text-zinc-400 hover:border-white/30 hover:text-white"
                           }`}
                         >
-                          {on && <Check size={14} className="mr-1.5 -mt-0.5 inline text-cyan" aria-hidden="true" />}
+                          {on && <Check size={14} className="mr-1.5 -mt-0.5 inline text-accent" aria-hidden="true" />}
                           {s.title}
                         </motion.button>
                       );

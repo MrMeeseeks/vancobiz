@@ -1,15 +1,18 @@
 /**
- * All site copy and numbers live here so they can be confirmed in one place.
- *
- * Anything marked `illustrative: true` is sample content written to show the layout.
- * Replace it with real client results (with permission) or delete it before launch.
+ * All site copy and numbers live here. Everything below is taken from vancobiz.com
+ * (home, /social-media, /photography) as of Nov 16, 2026 unless marked TODO.
  */
 
+const BASE = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+export const asset = (p: string) => `${BASE}${p}`;
+
 export const CONTACT = {
-  // TODO(confirm): real business inbox. Do not use a personal address.
-  email: "hello@vancobiz.com",
-  city: "Vancouver, BC",
-  hours: "Mon–Fri · 9am–6pm PT",
+  email: "info@vancobiz.com",
+  phone: "(604) 773-7736",
+  phoneHref: "tel:+16047737736",
+  address: "1919 Lonsdale Ave, North Vancouver",
+  city: "North Vancouver, BC",
+  clubUrl: "https://club.vancobiz.com/members/",
   // Optional: set NEXT_PUBLIC_FORM_ENDPOINT (e.g. a Formspree URL) to receive form posts.
   // Without it, the booking form opens a pre-filled email instead.
   formEndpoint: process.env.NEXT_PUBLIC_FORM_ENDPOINT ?? "",
@@ -17,136 +20,184 @@ export const CONTACT = {
 
 export const NAV_LINKS = [
   { href: "#services", label: "Services" },
-  { href: "#case-studies", label: "Case Studies" },
+  { href: "#work", label: "Work" },
+  { href: "#team", label: "Team" },
+  { href: "#pricing", label: "Pricing" },
   { href: "#club", label: "VancoBiz Club" },
-  { href: "#results", label: "Results" },
 ];
 
-// TODO(confirm): these are the figures from the brief. Verify each one is real and current.
+// From the "Our Impact in Numbers" counters on vancobiz.com.
 export const STATS = [
-  { value: 4.8, decimals: 1, suffix: "x", label: "Average client ROAS" },
-  { value: 15, decimals: 0, suffix: "M+", label: "Local & viral video views" },
-  { value: 120, decimals: 0, suffix: "+", label: "Vancouver brands scaled" },
-  { value: 50, decimals: 0, suffix: "+", label: "VancoBiz Club events hosted" },
+  { value: 70, decimals: 0, suffix: "+", label: "Leads generated" },
+  { value: 250, decimals: 0, suffix: "%", label: "Traffic growth" },
+  { value: 3, decimals: 0, suffix: "x", label: "ROI" },
 ];
 
-export type ServiceKey = "video" | "ads" | "brand" | "events";
+export type ServiceKey = "social" | "video" | "photo" | "events";
 
 export const SERVICES: {
   key: ServiceKey;
   title: string;
   blurb: string;
   deliverables: string[];
-  accent: string;
+  accent: "a1" | "a2" | "a3";
 }[] = [
   {
+    key: "social",
+    title: "Social Media Marketing",
+    blurb: "Consistent content, strategic ads and real engagement on Instagram and Facebook.",
+    deliverables: [
+      "Content creation & scheduling",
+      "Meta ad campaign management",
+      "Monthly analytics & optimisation",
+      "Strategy & planning sessions",
+    ],
+    accent: "a1",
+  },
+  {
     key: "video",
-    title: "Viral Content & Videography",
-    blurb: "Short-form video built for the feed, shot and cut in Vancouver.",
+    title: "Videography & Reels",
+    blurb: "Scroll-stopping short-form video, produced for the feed.",
     deliverables: [
-      "Reels, TikTok & Shorts production",
-      "Creator-style UGC shoots",
-      "Monthly content calendars",
-      "Editing, captions & hooks",
+      "Pro Reels production",
+      "Instagram Stories",
+      "Ad creative design",
+      "Collab posts with creators",
     ],
-    accent: "#00F0FF",
+    accent: "a2",
   },
   {
-    key: "ads",
-    title: "Paid Ads & Performance Marketing",
-    blurb: "Meta, Google and TikTok campaigns managed against real revenue.",
+    key: "photo",
+    title: "Photography",
+    blurb: "Visuals that speak louder than words, from menus to launch nights.",
     deliverables: [
-      "Funnel & offer strategy",
-      "Creative testing at scale",
-      "Pixel, CAPI & GA4 tracking",
-      "Weekly ROAS reporting",
+      "Product photography",
+      "Restaurant & food photography",
+      "Event photography",
+      "eCommerce & catalogue shots",
     ],
-    accent: "#7000FF",
-  },
-  {
-    key: "brand",
-    title: "Brand Identity & 3D Web Design",
-    blurb: "Identities and sites that look nothing like your competitors.",
-    deliverables: [
-      "Logo, type & colour systems",
-      "Interactive 3D websites",
-      "Landing pages that convert",
-      "Brand guidelines",
-    ],
-    accent: "#FFB800",
+    accent: "a3",
   },
   {
     key: "events",
     title: "Influencer & Event Activations",
-    blurb: "Real-world moments that turn into content and customers.",
+    blurb: "Real-world experiences that turn into content and customers.",
     deliverables: [
-      "Local creator partnerships",
-      "Launch parties & pop-ups",
+      "Influencer marketing campaigns",
+      "Taster Party brand showcases",
+      "VancoBiz Club networking",
       "On-site content capture",
-      "Community seeding",
     ],
-    accent: "#00F0FF",
+    accent: "a1",
   },
 ];
 
-export const CASE_STUDIES: {
+// The kinds of work shown on vancobiz.com. No invented results: add real numbers here when you have them.
+export const WORK: {
   id: string;
   sector: string;
   title: string;
   summary: string;
-  metrics: { value: string; label: string }[];
+  tags: string[];
   gradient: string;
-  illustrative: boolean;
 }[] = [
   {
-    id: "hospitality",
-    sector: "Local hospitality",
-    title: "Café launch in Mount Pleasant",
+    id: "taster-party",
+    sector: "Event activation",
+    title: "Taster Party",
     summary:
-      "Pre-opening creator dinner, a two-week Reels rollout and geo-targeted ads to fill the first month.",
-    metrics: [
-      { value: "—", label: "Opening-week covers" },
-      { value: "—", label: "Reel views" },
-    ],
-    gradient: "from-[#00F0FF]/40 via-[#7000FF]/20 to-transparent",
-    illustrative: true,
+      "A flavour-filled social experience: craft cocktails, wine flights and chef-inspired bites from handpicked vendors, in a vibrant, intimate setting.",
+    tags: ["Events", "Vendors", "Community"],
+    gradient: "from-accent/40 via-glow/20 to-transparent",
   },
   {
-    id: "ecommerce",
-    sector: "eCommerce",
-    title: "DTC brand scale-up",
+    id: "restaurant",
+    sector: "Restaurant & food",
+    title: "Menus that sell",
     summary:
-      "Weekly UGC creative tests feeding Meta and TikTok campaigns, with tracking rebuilt end to end.",
-    metrics: [
-      { value: "—", label: "ROAS" },
-      { value: "—", label: "Monthly revenue growth" },
-    ],
-    gradient: "from-[#7000FF]/45 via-[#00F0FF]/15 to-transparent",
-    illustrative: true,
+      "Irresistible visuals for menus, delivery platforms and social campaigns, highlighting texture, colour and atmosphere.",
+    tags: ["Photography", "Food", "Social"],
+    gradient: "from-glow/45 via-accent/15 to-transparent",
   },
   {
-    id: "real-estate",
-    sector: "Real estate",
-    title: "Luxury pre-sale campaign",
+    id: "product",
+    sector: "Product & jewellery",
+    title: "Products that shine",
     summary:
-      "Cinematic property film, a 3D listing microsite and a private broker evening.",
-    metrics: [
-      { value: "—", label: "Qualified leads" },
-      { value: "—", label: "Event RSVPs" },
-    ],
-    gradient: "from-[#FFB800]/40 via-[#7000FF]/15 to-transparent",
-    illustrative: true,
+      "Clean, high-resolution product and jewellery shots for eCommerce, catalogues and promotional campaigns.",
+    tags: ["Photography", "eCommerce"],
+    gradient: "from-highlight/40 via-glow/15 to-transparent",
+  },
+  {
+    id: "reels",
+    sector: "Social media",
+    title: "Reels that stop the scroll",
+    summary:
+      "Visuals, videos and captions in your brand voice, scheduled for peak performance and tuned every month.",
+    tags: ["Reels", "Stories", "Meta Ads"],
+    gradient: "from-accent/35 via-highlight/15 to-transparent",
   },
 ];
 
 export const CLUB = {
-  tagline: "Vancouver's founder network that actually meets in person.",
+  tagline: "Connect, collaborate, grow locally. Vancouver's business community that actually meets in person.",
   perks: [
-    { title: "Networking mixers", text: "Monthly evenings with founders, creators and operators." },
-    { title: "Founder workshops", text: "Hands-on sessions on ads, content and growth." },
-    { title: "Member perks", text: "Priority shoot dates and partner discounts." },
+    { title: "Connect", text: "Meet local founders, creators and business owners." },
+    { title: "Collaborate", text: "Find partners, cross-promote and create together." },
+    { title: "Grow locally", text: "Show your brand at Taster Party and community events." },
   ],
 };
+
+// TODO(confirm): roles for Arshia and Dorsa aren't listed on vancobiz.com.
+export const TEAM = [
+  { name: "Amin", role: "Founder & CEO", photo: "/team/amin.png" },
+  { name: "Pedram", role: "Social Media Manager", photo: "/team/pedram.png" },
+  { name: "Pegah", role: "Photographer", photo: "/team/pegah.png" },
+  { name: "Arshia", role: "Creative Team", photo: "/team/arshia.png" },
+  { name: "Dorsa", role: "Creative Team", photo: "/team/dorsa.png" },
+];
+
+// From vancobiz.com/social-media. TODO(confirm): billing period and currency aren't stated there.
+export const PACKAGES = [
+  {
+    name: "Soldier",
+    price: "$2,157",
+    features: ["1 hour strategy & planning", "5 pro Reels", "4 Instagram Stories", "2 professional photos"],
+    featured: false,
+  },
+  {
+    name: "King",
+    price: "$3,477",
+    features: [
+      "2 hours strategy & planning",
+      "8 pro Reels",
+      "8 Instagram Stories",
+      "1 ad design",
+      "1 collab post with a creator",
+      "4 professional photos",
+    ],
+    featured: true,
+  },
+  {
+    name: "Queen",
+    price: "$5,997",
+    features: [
+      "3 hours strategy & planning",
+      "14 pro Reels",
+      "12 Instagram Stories",
+      "2 ad designs",
+      "2 collab posts with creators",
+      "6 professional photos",
+    ],
+    featured: false,
+  },
+];
+
+export const CONTRACT_DISCOUNTS = [
+  { term: "3 months", off: "5%" },
+  { term: "6 months", off: "12%" },
+  { term: "12 months", off: "25%" },
+];
 
 export const REVENUE_OPTIONS = [
   "Under $10k / month",

@@ -10,16 +10,17 @@ import {
   useSpring,
   useTransform,
 } from "framer-motion";
-import { Clapperboard, Megaphone, Palette, PartyPopper, Plus, type LucideIcon } from "lucide-react";
+import { Camera, Clapperboard, Megaphone, PartyPopper, Plus, type LucideIcon } from "lucide-react";
 import { SERVICES, type ServiceKey } from "@/lib/content";
 import { useCanHover, useIsMobile } from "@/lib/useDevice";
+import { usePaletteColors } from "@/lib/design";
 
 const ServiceBadge = dynamic(() => import("./three/ServiceBadge"), { ssr: false });
 
 const ICONS: Record<ServiceKey, LucideIcon> = {
+  social: Megaphone,
   video: Clapperboard,
-  ads: Megaphone,
-  brand: Palette,
+  photo: Camera,
   events: PartyPopper,
 };
 
@@ -35,6 +36,7 @@ function TiltCard({
   canHover: boolean;
 }) {
   const [active, setActive] = useState(false);
+  const accent = usePaletteColors()[service.accent];
   const mx = useMotionValue(0.5);
   const my = useMotionValue(0.5);
   const rotateX = useSpring(useTransform(my, [0, 1], [10, -10]), { stiffness: 180, damping: 18 });
@@ -42,7 +44,7 @@ function TiltCard({
   const glow = useTransform(
     [mx, my],
     ([x, y]: number[]) =>
-      `radial-gradient(400px circle at ${x * 100}% ${y * 100}%, ${service.accent}22, transparent 60%)`,
+      `radial-gradient(400px circle at ${x * 100}% ${y * 100}%, color-mix(in srgb, var(--${service.accent}) 14%, transparent), transparent 60%)`,
   );
   const Icon = ICONS[service.key];
   const panelId = `svc-${service.key}`;
@@ -84,13 +86,13 @@ function TiltCard({
         <div className="relative flex items-start justify-between" style={{ transform: "translateZ(40px)" }}>
           <div className="relative size-24 sm:size-28">
             {render3D ? (
-              <ServiceBadge kind={service.key} color={service.accent} active={active} />
+              <ServiceBadge kind={service.key} color={accent} active={active} />
             ) : (
               <div
                 className="grid size-full place-items-center rounded-2xl border border-white/10"
-                style={{ background: `radial-gradient(circle, ${service.accent}33, transparent 70%)` }}
+                style={{ background: `radial-gradient(circle, ${accent}33, transparent 70%)` }}
               >
-                <Icon size={36} style={{ color: service.accent }} aria-hidden="true" />
+                <Icon size={36} style={{ color: accent }} aria-hidden="true" />
               </div>
             )}
           </div>
@@ -113,7 +115,7 @@ function TiltCard({
             onClick={() => setActive((a) => !a)}
             aria-expanded={active}
             aria-controls={panelId}
-            className="relative mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-cyan"
+            className="relative mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-accent"
           >
             <Plus size={16} className={`transition-transform ${active ? "rotate-45" : ""}`} />
             {active ? "Hide deliverables" : "See deliverables"}
@@ -134,7 +136,7 @@ function TiltCard({
               <ul className="mt-5 grid gap-2 border-t border-white/10 pt-5">
                 {service.deliverables.map((d) => (
                   <li key={d} className="flex items-center gap-2.5 text-sm text-zinc-200">
-                    <span className="size-1.5 rounded-full" style={{ background: service.accent }} />
+                    <span className="size-1.5 rounded-full" style={{ background: accent }} />
                     {d}
                   </li>
                 ))}
@@ -167,10 +169,10 @@ export default function SpatialServices() {
       <div className="mx-auto max-w-6xl">
         <p className="eyebrow">Services</p>
         <h2 id="services-title" className="display mt-3 max-w-3xl text-[2rem] leading-[1.05] sm:text-6xl">
-          Four pillars. <span className="text-gradient">Zero</span> templates.
+          Be creative, <span className="text-gradient">not repetitive.</span>
         </h2>
         <p className="mt-5 max-w-xl text-zinc-400">
-          Every engagement is built from these four. Hover a pillar to see what ships.
+          Powerful digital strategy blended with creative, real-world experiences. Hover a pillar to see what ships.
         </p>
 
         <div className="mt-12 grid gap-4 sm:grid-cols-2">

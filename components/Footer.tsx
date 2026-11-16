@@ -19,7 +19,15 @@ export default function Footer() {
             Contact
           </a>
         </nav>
-        <p className="text-sm text-zinc-500">© 2026 VancoBiz · {CONTACT.city}</p>
+        <div className="text-sm text-zinc-500">
+          <p>
+            <a href={CONTACT.phoneHref} className="hover:text-white">
+              {CONTACT.phone}
+            </a>{" "}
+            · {CONTACT.address}
+          </p>
+          <p className="mt-1">© 2026 VancoBiz</p>
+        </div>
       </div>
     </footer>
   );

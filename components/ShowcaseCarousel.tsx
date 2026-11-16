@@ -2,8 +2,8 @@
 
 import { useRef, useState, type KeyboardEvent } from "react";
 import { motion, type PanInfo } from "framer-motion";
-import { ArrowLeft, ArrowRight, Crown, RotateCcw, Users, Wrench, Gift } from "lucide-react";
-import { CASE_STUDIES, CLUB } from "@/lib/content";
+import { ArrowLeft, ArrowRight, Crown, Handshake, RotateCcw, Sprout, Users } from "lucide-react";
+import { WORK, CLUB, CONTACT } from "@/lib/content";
 import { useCanHover, useIsMobile } from "@/lib/useDevice";
 import Logo from "./Logo";
 
@@ -11,7 +11,7 @@ function CaseCoverflow() {
   const [active, setActive] = useState(0);
   const dragged = useRef(false);
   const mobile = useIsMobile();
-  const n = CASE_STUDIES.length;
+  const n = WORK.length;
   const go = (i: number) => setActive(((i % n) + n) % n);
 
   function onDragEnd(_: unknown, info: PanInfo) {
@@ -32,10 +32,10 @@ function CaseCoverflow() {
       <div
         role="region"
         aria-roledescription="carousel"
-        aria-label="Client case studies"
+        aria-label="Our work"
         tabIndex={0}
         onKeyDown={onKey}
-        className="relative h-[460px] select-none outline-none focus-visible:ring-2 focus-visible:ring-cyan/60 sm:h-[480px]"
+        className="relative h-[460px] select-none outline-none focus-visible:ring-2 focus-visible:ring-accent/60 sm:h-[480px]"
         style={{ perspective: 1400 }}
       >
         <motion.div
@@ -47,7 +47,7 @@ function CaseCoverflow() {
           className="absolute inset-0 cursor-grab active:cursor-grabbing"
           style={{ transformStyle: "preserve-3d" }}
         >
-          {CASE_STUDIES.map((c, i) => {
+          {WORK.map((c, i) => {
             // Shortest signed distance around the loop so cards wrap both ways.
             let offset = i - active;
             if (offset > n / 2) offset -= n;
@@ -79,24 +79,16 @@ function CaseCoverflow() {
                   0{i + 1}
                 </div>
                 <div className="relative flex h-full flex-col p-7">
-                  <div className="flex items-center justify-between">
-                    <span className="eyebrow">{c.sector}</span>
-                    {c.illustrative && (
-                      <span className="rounded-full border border-gold/40 px-2.5 py-0.5 text-[10px] font-semibold tracking-wider text-gold uppercase">
-                        Sample
-                      </span>
-                    )}
-                  </div>
+                  <span className="eyebrow">{c.sector}</span>
                   <h3 className="display mt-4 text-3xl leading-tight">{c.title}</h3>
                   <p className="mt-3 text-zinc-300">{c.summary}</p>
-                  <dl className="mt-auto grid grid-cols-2 gap-3">
-                    {c.metrics.map((m) => (
-                      <div key={m.label} className="flex flex-col-reverse rounded-2xl bg-black/30 p-4">
-                        <dt className="mt-1 text-xs text-zinc-400">{m.label}</dt>
-                        <dd className="display text-2xl text-white">{m.value}</dd>
-                      </div>
+                  <ul className="mt-auto flex flex-wrap gap-2" aria-label="Tags">
+                    {c.tags.map((t) => (
+                      <li key={t} className="rounded-full border border-white/15 bg-black/30 px-3 py-1 text-xs text-zinc-200">
+                        {t}
+                      </li>
                     ))}
-                  </dl>
+                  </ul>
                 </div>
               </motion.article>
             );
@@ -108,28 +100,28 @@ function CaseCoverflow() {
         <button
           type="button"
           onClick={() => go(active - 1)}
-          aria-label="Previous case study"
-          className="glass grid size-11 place-items-center rounded-full transition hover:border-cyan/60"
+          aria-label="Previous project"
+          className="glass grid size-11 place-items-center rounded-full transition hover:border-accent/60"
         >
           <ArrowLeft size={18} />
         </button>
         <div className="flex gap-2">
-          {CASE_STUDIES.map((c, i) => (
+          {WORK.map((c, i) => (
             <button
               key={c.id}
               type="button"
               onClick={() => go(i)}
               aria-label={`Show ${c.title}`}
               aria-current={i === active}
-              className={`h-1.5 rounded-full transition-all ${i === active ? "w-8 bg-cyan" : "w-3 bg-white/25"}`}
+              className={`h-1.5 rounded-full transition-all ${i === active ? "w-8 bg-accent" : "w-3 bg-white/25"}`}
             />
           ))}
         </div>
         <button
           type="button"
           onClick={() => go(active + 1)}
-          aria-label="Next case study"
-          className="glass grid size-11 place-items-center rounded-full transition hover:border-cyan/60"
+          aria-label="Next project"
+          className="glass grid size-11 place-items-center rounded-full transition hover:border-accent/60"
         >
           <ArrowRight size={18} />
         </button>
@@ -138,7 +130,7 @@ function CaseCoverflow() {
   );
 }
 
-const PERK_ICONS = [Users, Wrench, Gift];
+const PERK_ICONS = [Users, Handshake, Sprout];
 
 function VipPass() {
   const [flipped, setFlipped] = useState(false);
@@ -157,18 +149,18 @@ function VipPass() {
         whileHover={canHover ? { scale: 1.02 } : undefined}
         transition={{ type: "spring", stiffness: 90, damping: 16 }}
         style={{ transformStyle: "preserve-3d" }}
-        className="relative block aspect-[5/7] w-full text-left focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-cyan"
+        className="relative block aspect-[5/7] w-full text-left focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
       >
         {/* Front */}
-        <div className="backface-hidden absolute inset-0 overflow-hidden rounded-[28px] border border-white/15 bg-[linear-gradient(145deg,#141420,#0a0a10_55%,#1b1030)] p-7 shadow-[0_30px_80px_rgba(112,0,255,0.35)]">
-          <div aria-hidden="true" className="absolute inset-0 bg-[conic-gradient(from_200deg_at_70%_20%,rgba(0,240,255,0.25),rgba(112,0,255,0.25),rgba(255,184,0,0.2),rgba(0,240,255,0.25))] opacity-60 mix-blend-screen blur-2xl" />
+        <div className="backface-hidden absolute inset-0 overflow-hidden rounded-[28px] border border-white/15 bg-[linear-gradient(145deg,#141420,#0a0a10_55%,#1b1030)] p-7 shadow-[0_30px_80px_color-mix(in_srgb,var(--a2)_35%,transparent)]">
+          <div aria-hidden="true" className="absolute inset-0 bg-[conic-gradient(from_200deg_at_70%_20%,color-mix(in_srgb,var(--a1)_25%,transparent),color-mix(in_srgb,var(--a2)_25%,transparent),color-mix(in_srgb,var(--a3)_20%,transparent),color-mix(in_srgb,var(--a1)_25%,transparent))] opacity-60 mix-blend-screen blur-2xl" />
           <div className="relative flex h-full flex-col">
             <div className="flex items-center justify-between">
               <Logo />
-              <Crown className="text-gold" size={22} aria-hidden="true" />
+              <Crown className="text-highlight" size={22} aria-hidden="true" />
             </div>
             <div className="mt-auto">
-              <div aria-hidden="true" className="mb-6 h-9 w-12 rounded-md bg-gradient-to-br from-gold to-[#a8770a] opacity-90" />
+              <div aria-hidden="true" className="mb-6 h-9 w-12 rounded-md bg-gradient-to-br from-highlight to-[#a8770a] opacity-90" />
               <p className="text-xs tracking-[0.3em] text-zinc-400 uppercase">Member pass</p>
               <p className="display mt-1 text-4xl leading-none">
                 VancoBiz <span className="text-gradient">Club</span>
@@ -182,7 +174,7 @@ function VipPass() {
 
         {/* Back */}
         <div
-          className="backface-hidden absolute inset-0 overflow-hidden rounded-[28px] border border-cyan/30 bg-[linear-gradient(160deg,#0d1a22,#0a0a10_60%)] p-7"
+          className="backface-hidden absolute inset-0 overflow-hidden rounded-[28px] border border-accent/30 bg-[linear-gradient(160deg,#0d1a22,#0a0a10_60%)] p-7"
           style={{ transform: "rotateY(180deg)" }}
         >
           <p className="eyebrow">Inside the club</p>
@@ -191,7 +183,7 @@ function VipPass() {
               const Icon = PERK_ICONS[i % PERK_ICONS.length];
               return (
                 <li key={p.title} className="flex gap-3">
-                  <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-white/5 text-cyan">
+                  <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-white/5 text-accent">
                     <Icon size={18} aria-hidden="true" />
                   </span>
                   <span>
@@ -214,13 +206,13 @@ function VipPass() {
 export default function ShowcaseCarousel() {
   return (
     <>
-      <section id="case-studies" aria-labelledby="cases-title" className="relative overflow-hidden px-5 py-20 sm:py-28">
+      <section id="work" aria-labelledby="cases-title" className="relative overflow-hidden px-5 py-20 sm:py-28">
         <div className="mx-auto max-w-6xl">
           <div className="mb-12 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
             <div>
-              <p className="eyebrow">Case studies</p>
+              <p className="eyebrow">Work</p>
               <h2 id="cases-title" className="display mt-3 text-[2rem] leading-[1.05] sm:text-6xl">
-                Vancouver wins.
+                Made in Vancouver.
               </h2>
             </div>
             <p className="max-w-sm text-zinc-400">Drag, swipe or use the arrows to move through the work.</p>
@@ -232,7 +224,7 @@ export default function ShowcaseCarousel() {
       <section id="club" aria-labelledby="club-title" className="relative overflow-hidden px-5 py-20 sm:py-28">
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute top-1/2 left-1/2 -z-10 size-[40rem] -translate-1/2 rounded-full bg-violet/20 blur-[150px]"
+          className="pointer-events-none absolute top-1/2 left-1/2 -z-10 size-[40rem] -translate-1/2 rounded-full bg-glow/20 blur-[150px]"
         />
         <div className="mx-auto grid max-w-6xl items-center gap-14 md:grid-cols-2">
           <div>
@@ -241,9 +233,14 @@ export default function ShowcaseCarousel() {
               The room where <span className="text-gradient">Vancouver</span> builds.
             </h2>
             <p className="mt-5 max-w-md text-lg text-zinc-400">{CLUB.tagline}</p>
-            <a href="#book" className="btn-ghost mt-8">
-              Ask about membership <ArrowRight size={16} />
-            </a>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <a href={CONTACT.clubUrl} className="btn-glow" target="_blank" rel="noopener">
+                Check the Club <ArrowRight size={16} />
+              </a>
+              <a href="#book" className="btn-ghost">
+                Ask about Taster Party
+              </a>
+            </div>
           </div>
           <VipPass />
         </div>

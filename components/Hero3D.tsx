@@ -4,11 +4,12 @@ import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
 import { ArrowRight, Sparkles } from "lucide-react";
 import { useIsMobile, useReducedMotion } from "@/lib/useDevice";
+import { useDesign } from "@/lib/design";
 
 function SceneFallback() {
   return (
     <div className="grid h-full w-full place-items-center" aria-hidden="true">
-      <div className="size-64 animate-pulse rounded-full bg-[radial-gradient(circle,rgba(0,240,255,0.35),rgba(112,0,255,0.2)_45%,transparent_70%)] blur-2xl" />
+      <div className="size-64 animate-pulse rounded-full bg-[radial-gradient(circle,color-mix(in_srgb,var(--a1)_35%,transparent),color-mix(in_srgb,var(--a2)_20%,transparent)_45%,transparent_70%)] blur-2xl" />
     </div>
   );
 }
@@ -23,18 +24,19 @@ const HEADLINE = ["Vancouver's", "Boldest", "Creative", "Marketing", "Agency"];
 export default function Hero3D() {
   const mobile = useIsMobile();
   const reducedMotion = useReducedMotion();
+  const { palette, logo } = useDesign();
 
   return (
     <section id="top" className="relative isolate overflow-hidden pt-16 lg:min-h-[100svh] lg:pt-24">
       {/* Ambient glows */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-20">
-        <div className="absolute -top-40 right-[-10%] size-[42rem] rounded-full bg-violet/25 blur-[140px]" />
-        <div className="absolute bottom-[-20%] left-[-10%] size-[36rem] rounded-full bg-cyan/15 blur-[140px]" />
+        <div className="absolute -top-40 right-[-10%] size-[42rem] rounded-full bg-glow/25 blur-[140px]" />
+        <div className="absolute bottom-[-20%] left-[-10%] size-[36rem] rounded-full bg-accent/15 blur-[140px]" />
       </div>
 
       {/* 3D canvas: its own band above the copy on small screens, right half on desktop */}
       <div className="relative h-[36svh] min-h-[240px] lg:absolute lg:inset-0 lg:left-[45%] lg:-z-10 lg:h-auto">
-        <HeroScene mobile={mobile} reducedMotion={reducedMotion} />
+        <HeroScene mobile={mobile} reducedMotion={reducedMotion} palette={palette} logo={logo} />
       </div>
 
       <div className="mx-auto flex max-w-6xl flex-col justify-center px-5 pb-16 lg:min-h-[calc(100svh-6rem)]">
@@ -44,8 +46,8 @@ export default function Hero3D() {
           transition={{ duration: 0.6 }}
           className="glass mb-6 inline-flex w-fit items-center gap-2 rounded-full px-3 py-1.5 text-xs text-zinc-300"
         >
-          <Sparkles size={14} className="text-gold" />
-          Strategy · Video · Ads · Community
+          <Sparkles size={14} className="text-highlight" />
+          Social Media · Video · Photography · Events
         </motion.p>
 
         <h1 className="display max-w-3xl text-[clamp(2.1rem,9.5vw,5.4rem)] lg:text-[clamp(2.5rem,6vw,5.4rem)] leading-[0.95]">
@@ -94,7 +96,7 @@ export default function Hero3D() {
         className="absolute bottom-6 left-1/2 hidden -translate-x-1/2 flex-col items-center gap-2 text-[10px] tracking-[0.3em] text-zinc-500 uppercase md:flex"
       >
         Scroll
-        <span className="h-10 w-px bg-gradient-to-b from-cyan to-transparent" />
+        <span className="h-10 w-px bg-gradient-to-b from-accent to-transparent" />
       </div>
     </section>
   );

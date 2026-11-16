@@ -2,15 +2,33 @@
 
 @theme inline {
   --color-obsidian: #09090b;
-  --color-cyan: #00f0ff;
-  --color-violet: #7000ff;
-  --color-gold: #ffb800;
+  /* accent = action colour (CTAs), glow = dominant ambient colour, highlight = small sparks */
+  --color-accent: var(--a1);
+  --color-glow: var(--a2);
+  --color-highlight: var(--a3);
   --font-display: var(--font-syne);
   --font-sans: var(--font-inter);
 }
 
-:root {
+/* Keep in sync with PALETTES in lib/design.tsx (the 3D scenes read those). */
+:root,
+:root[data-palette="brand"] {
   color-scheme: dark;
+  --a1: #ff8a1f;
+  --a2: #7b2ff7;
+  --a3: #ffc66b;
+  --logo-v: #ff8a1f;
+  --logo-b: #9b5cff;
+  --grad: linear-gradient(100deg, #b98cff 0%, #ff8a1f 70%, #ffc66b 100%);
+}
+
+:root[data-palette="electric"] {
+  --a1: #00f0ff;
+  --a2: #7000ff;
+  --a3: #ffb800;
+  --logo-v: #00f0ff;
+  --logo-b: #9b5cff;
+  --grad: linear-gradient(100deg, #00f0ff 0%, #7000ff 50%, #ffb800 100%);
 }
 
 html {
@@ -27,7 +45,7 @@ body {
 }
 
 ::selection {
-  background: #00f0ff;
+  background: var(--a1);
   color: #09090b;
 }
 
@@ -36,20 +54,20 @@ body {
     @apply border border-white/10 bg-white/5 backdrop-blur-md;
   }
   .eyebrow {
-    @apply text-xs font-semibold tracking-[0.2em] text-cyan uppercase;
+    @apply text-xs font-semibold tracking-[0.2em] text-accent uppercase;
   }
   .display {
     @apply font-display font-extrabold tracking-tight;
   }
   .btn-glow {
-    @apply inline-flex items-center justify-center gap-2 rounded-full bg-cyan px-6 py-3 text-sm font-semibold text-obsidian transition;
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-accent px-6 py-3 text-sm font-semibold text-obsidian transition;
     box-shadow:
-      0 0 24px rgb(0 240 255 / 0.45),
+      0 0 24px color-mix(in srgb, var(--a1) 45%, transparent),
       inset 0 0 0 1px rgb(255 255 255 / 0.4);
   }
   .btn-glow:hover {
     box-shadow:
-      0 0 40px rgb(0 240 255 / 0.7),
+      0 0 40px color-mix(in srgb, var(--a1) 70%, transparent),
       inset 0 0 0 1px rgb(255 255 255 / 0.6);
     transform: translateY(-1px);
   }
@@ -57,7 +75,7 @@ body {
     @apply inline-flex items-center justify-center gap-2 rounded-full border border-white/15 bg-white/5 px-6 py-3 text-sm font-semibold text-white backdrop-blur-md transition hover:border-white/40 hover:bg-white/10;
   }
   .text-gradient {
-    background: linear-gradient(100deg, #00f0ff 0%, #7000ff 50%, #ffb800 100%);
+    background: var(--grad);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
