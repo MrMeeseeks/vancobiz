@@ -26,12 +26,13 @@ function stickersFor([x, y, z]: [number, number, number]): StickerSpec[] {
   const out: StickerSpec[] = [];
   // Front (+z): the logo. V top-left, B bottom-right, orange on the other diagonal.
   if (z > 0) out.push({ axis: 2, sign: 1, key: x < 0 && y > 0 ? "V" : x > 0 && y < 0 ? "B" : "orange" });
-  // Back (-z): one-colour variant, read from behind (viewer's left is +x).
-  if (z < 0) out.push({ axis: 2, sign: -1, key: x > 0 && y > 0 ? "V-light" : x < 0 && y < 0 ? "B-light" : "light" });
+  // Back (-z): the logo again, read from behind (viewer's left is +x).
+  if (z < 0) out.push({ axis: 2, sign: -1, key: x > 0 && y > 0 ? "V" : x < 0 && y < 0 ? "B" : "orange" });
+  // Sides: orange and purple only.
   if (x > 0) out.push({ axis: 0, sign: 1, key: "orange" });
   if (x < 0) out.push({ axis: 0, sign: -1, key: "purple" });
-  if (y > 0) out.push({ axis: 1, sign: 1, key: "amber" });
-  if (y < 0) out.push({ axis: 1, sign: -1, key: "slate" });
+  if (y > 0) out.push({ axis: 1, sign: 1, key: "orange" });
+  if (y < 0) out.push({ axis: 1, sign: -1, key: "purple" });
   return out;
 }
 
@@ -73,11 +74,6 @@ function useStickerTextures(ready: boolean, family: string) {
       B: makeTexture(TILE.purple, "B", "#FFFFFF", family),
       orange: makeTexture(TILE.orange, null, "", family),
       purple: makeTexture(TILE.purple, null, "", family),
-      amber: makeTexture(TILE.amber, null, "", family),
-      slate: makeTexture(TILE.slate, null, "", family),
-      light: makeTexture(TILE.light, null, "", family),
-      "V-light": makeTexture(TILE.light, "V", TILE.ink, family),
-      "B-light": makeTexture(TILE.light, "B", TILE.ink, family),
     } as Record<string, THREE.CanvasTexture>;
   }, [ready, family]);
 }
@@ -242,19 +238,13 @@ function Rig({
     };
   });
 
-  // Intro: start scrambled, then assemble into the logo.
+  // Intro: start scrambled. The page solves it when the visitor scrolls down.
   useEffect(() => {
     randomMoves(10).forEach((m) => {
       const ids = layerIds(m);
       commit(m, ids, ids.map((i) => cubies.current[i].pos.clone()), ids.map((i) => cubies.current[i].quat.clone()));
     });
     report();
-    const t = window.setTimeout(() => {
-      queue.current.push(...solveMoves());
-      history.current = [];
-      report();
-    }, 900);
-    return () => window.clearTimeout(t);
     // eslint-disable-next-line react-hooks/exhaustive-deps -- run once on mount
   }, []);
 

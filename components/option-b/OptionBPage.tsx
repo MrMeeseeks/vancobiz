@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import { ArrowLeft, Crosshair, RotateCcw, Shuffle, Sparkles } from "lucide-react";
 import { TileLockup, TileMark } from "./TileMark";
@@ -21,6 +21,27 @@ export default function OptionBPage() {
   const api = useRef<CubeApi | null>(null);
   const [status, setStatus] = useState<CubeStatus>({ moves: 0, solved: false, busy: true });
   const reduced = useReducedMotion();
+  const statusRef = useRef(status);
+  useEffect(() => {
+    statusRef.current = status;
+  }, [status]);
+
+  // Scrolling down solves the cube back into the logo.
+  useEffect(() => {
+    let lastY = window.scrollY;
+    const onScroll = () => {
+      const y = window.scrollY;
+      const down = y > lastY + 2;
+      lastY = y;
+      const s = statusRef.current;
+      if (down && !s.solved && !s.busy) {
+        statusRef.current = { ...s, busy: true }; // avoid queuing twice before the next status update
+        api.current?.solve();
+      }
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   return (
     <div className="min-h-screen">
@@ -39,8 +60,8 @@ export default function OptionBPage() {
           Four tiles. <span className="text-gradient">One puzzle.</span>
         </h1>
         <p className="mt-5 max-w-2xl text-zinc-400">
-          The Tile Grid logo as a 2×2 puzzle cube. Its front face is the logo; the back is the one-colour
-          version. It starts scrambled and solves itself. Then it&apos;s your turn.
+          The Tile Grid logo as a 2×2 puzzle cube in orange and purple. It starts scrambled. Scroll down and
+          it solves itself into the logo. Then it&apos;s your turn.
         </p>
 
         <section aria-label="Interactive tile cube" className="mt-10 grid gap-6 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">
@@ -72,7 +93,7 @@ export default function OptionBPage() {
                 <li>
                   <span className="text-white">Drag the background</span> to turn the whole cube.
                 </li>
-                <li>Solved means the front shows the logo again.</li>
+                <li>Scroll down the page and it solves itself.</li>
               </ul>
               <div className="mt-5 flex flex-wrap gap-2">
                 <button type="button" className="btn-glow" onClick={() => api.current?.scramble()}>
@@ -94,11 +115,11 @@ export default function OptionBPage() {
               <h2 className="display text-xl">The faces</h2>
               <ul className="mt-3 grid grid-cols-2 gap-x-4 gap-y-2 text-sm text-zinc-300">
                 <li>Front: the logo</li>
-                <li>Back: one colour</li>
+                <li>Back: the logo</li>
                 <li>Right: orange</li>
                 <li>Left: purple</li>
-                <li>Top: amber</li>
-                <li>Bottom: slate</li>
+                <li>Top: orange</li>
+                <li>Bottom: purple</li>
               </ul>
             </div>
           </div>
@@ -109,16 +130,13 @@ export default function OptionBPage() {
             Flat lockups
           </h2>
           <div className="mt-6 grid gap-4 md:grid-cols-2">
-            <div className="grid min-h-48 place-items-center rounded-[28px] border border-white/10 bg-black p-8">
-              <TileLockup tone="dark" className="text-3xl sm:text-4xl" />
+            <div className="glass grid min-h-48 place-items-center rounded-[28px] p-8 md:col-span-2">
+              <TileLockup tone="dark" className="text-3xl sm:text-5xl" />
             </div>
-            <div className="grid min-h-48 place-items-center rounded-[28px] bg-white p-8">
-              <TileLockup tone="light" className="text-3xl sm:text-4xl" />
-            </div>
-            <div className="grid min-h-40 place-items-center rounded-[28px] bg-white p-8">
+            <div className="glass grid min-h-40 place-items-center rounded-[28px] p-8">
               <TileLockup tone="mono" className="text-2xl sm:text-3xl" />
             </div>
-            <div className="flex min-h-40 items-end justify-center gap-6 rounded-[28px] bg-white p-8">
+            <div className="glass flex min-h-40 items-end justify-center gap-6 rounded-[28px] p-8">
               {[48, 32, 16].map((s) => (
                 <figure key={s} className="flex flex-col items-center gap-2">
                   <span className="block shrink-0" style={{ width: s, height: s }}>

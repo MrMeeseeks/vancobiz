@@ -4,8 +4,9 @@ type Variant = "brand" | "mono";
 
 /** The Tile Grid symbol: V and B on the violet diagonal, orange on the other. */
 export function TileMark({ variant = "brand", className = "" }: { variant?: Variant; className?: string }) {
-  const purple = variant === "mono" ? TILE.ink : TILE.purple;
-  const orange = variant === "mono" ? TILE.ink : TILE.orange;
+  // One-colour version is all purple.
+  const purple = TILE.purple;
+  const orange = variant === "mono" ? TILE.purple : TILE.orange;
   const letter = { fontFamily: "var(--font-syne), sans-serif", fontWeight: 800, fontSize: 30, fill: "#FFFFFF", textAnchor: "middle" as const };
   return (
     <svg viewBox="0 0 100 100" className={className} role="img" aria-label="VancoBiz tile mark">
@@ -28,11 +29,12 @@ export function TileLockup({
   tone,
   className = "",
 }: {
-  tone: "dark" | "light" | "mono";
+  tone: "dark" | "mono";
   className?: string;
 }) {
-  const vanco = tone === "dark" ? "#FFFFFF" : TILE.ink;
-  const biz = tone === "dark" ? TILE.orange : tone === "light" ? TILE.purple : TILE.ink;
+  // Orange and purple only: wordmark in purple, "Biz" in orange (or all purple for one colour).
+  const vanco = TILE.purple;
+  const biz = tone === "dark" ? TILE.orange : TILE.purple;
   return (
     <span className={`inline-flex items-center gap-[0.35em] ${className}`}>
       <TileMark variant={tone === "mono" ? "mono" : "brand"} className="h-[1.6em] w-[1.6em]" />
