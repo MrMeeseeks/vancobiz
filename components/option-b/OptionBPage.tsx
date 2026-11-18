@@ -7,6 +7,7 @@ import { TileLockup, TileMark } from "./TileMark";
 import type { CubeApi, CubeStatus } from "./TileCube";
 import { useReducedMotion } from "@/lib/useDevice";
 import { asset } from "@/lib/content";
+import LogoOptionSwitch from "../LogoOptionSwitch";
 
 const TileCube = dynamic(() => import("./TileCube"), {
   ssr: false,
@@ -48,13 +49,14 @@ export default function OptionBPage() {
       <header className="border-b border-white/10">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5">
           <TileLockup tone="dark" className="text-lg" />
-          <a href={asset("/")} className="btn-ghost !px-4 !py-2">
-            <ArrowLeft size={16} aria-hidden="true" /> Option A (current site)
+          <a href={asset("/")} className="btn-ghost !px-4 !py-2 whitespace-nowrap">
+            <ArrowLeft size={16} aria-hidden="true" /> Option A<span className="hidden sm:inline"> (current site)</span>
           </a>
         </div>
       </header>
 
-      <main className="mx-auto max-w-6xl px-5 py-12 sm:py-16">
+      <LogoOptionSwitch current="b" />
+      <main className="mx-auto max-w-6xl px-5 py-12 pb-28 sm:py-16 sm:pb-28">
         <p className="eyebrow">Logo option B · Tile Grid</p>
         <h1 className="display mt-3 max-w-3xl text-[2rem] leading-[1.05] sm:text-6xl">
           Four tiles. <span className="text-gradient">One puzzle.</span>

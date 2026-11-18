@@ -8,6 +8,7 @@ import TeamSection from "@/components/TeamSection";
 import BookingSection from "@/components/BookingSection";
 import Footer from "@/components/Footer";
 import DesignPanel from "@/components/DesignPanel";
+import LogoOptionSwitch from "@/components/LogoOptionSwitch";
 import { DesignProvider } from "@/lib/design";
 
 export default function Home() {
@@ -25,6 +26,7 @@ export default function Home() {
       </main>
       <Footer />
       <DesignPanel />
+      <LogoOptionSwitch current="a" />
     </DesignProvider>
   );
 }
